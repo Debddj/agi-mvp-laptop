@@ -1,12 +1,12 @@
-from agents.planner import plan
+from agents.llm_planner import llm_plan
 from agents.executor import execute
 from agents.critic import critique
 
 
-def run_agent(task: str, max_iters=3):
+def run_agent(model, task: str, max_iters=3):
     print(f"\nTASK: {task}\n")
 
-    steps = plan(task)
+    steps = llm_plan(model, "tokenizer.model", task)
     print("PLAN:")
     for i, step in enumerate(steps, 1):
         print(f"{i}. {step}")

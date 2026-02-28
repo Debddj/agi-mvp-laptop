@@ -1,8 +1,16 @@
 from agents.agent_loop import run_agent
-from agents.planner import plan
-from agents.executor import execute
-from agents.critic import critique
+from model.transformer import TinyLLM
 
 
 if __name__ == "__main__":
-    run_agent("Calculate 12 * (7 + 3)")
+    config = {
+        "vocab_size": 2000,
+        "n_layers": 6,
+        "n_heads": 6,
+        "hidden_size": 384,
+        "mlp_ratio": 4,
+    }
+
+    model = TinyLLM(config)
+
+    run_agent(model, "Calculate 12 * (7 + 3)")
