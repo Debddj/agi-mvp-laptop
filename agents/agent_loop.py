@@ -1,30 +1,44 @@
 from agents.llm_planner import llm_plan
 from agents.executor import execute
 from agents.critic import critique
+from agents.memory import get_cached_plan, store_plan
 
 
-def run_agent(model, task: str, max_iters=3):
-    print(f"\nTASK: {task}\n")
+def run_agent(model, task: str, image_path: str = None, max_iters=3):
+    print(f"\n==========================================")
+    print(f"MULTI-MODAL AGI AGENT TASK: {task}")
+    if image_path:
+        print(f"IMAGE INPUT: {image_path}")
+    print(f"==========================================\n")
 
-    steps = llm_plan(model, "tokenizer.model", task)
-    print("PLAN:")
+    cached = get_cached_plan(task)
+    if cached:
+        print("[Memory] Using cached plan from episodic memory.")
+        steps = cached
+    else:
+        print("[Planner] Generating step-by-step reasoning plan...")
+        steps = llm_plan(model, "tokenizer.model", task, image_input=image_path)
+        store_plan(task, steps)
+
+    print("\nREASONING PLAN:")
     for i, step in enumerate(steps, 1):
-        print(f"{i}. {step}")
+        print(f"  {i}. {step}")
 
-    memory = []
+    execution_history = []
 
     for step in steps:
         for attempt in range(max_iters):
-            output = execute(step, task)
+            output = execute(step, task, image_path=image_path)
             success, feedback = critique(output)
 
-            print(f"\nSTEP: {step}")
-            print(f"OUTPUT: {output}")
-            print(f"CRITIC: {feedback}")
+            print(f"\n-> STEP: {step}")
+            print(f"   OUTPUT: {output}")
+            print(f"   CRITIC: {feedback}")
 
-            memory.append((step, output, success))
+            execution_history.append((step, output, success))
 
             if success:
                 break
 
-    return memory
+    print("\nTask execution finished successfully.\n")
+    return execution_history
