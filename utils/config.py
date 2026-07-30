@@ -1,4 +1,5 @@
 import os
+
 import yaml
 
 DEFAULT_CONFIG = {
@@ -32,7 +33,7 @@ def load_config(path="configs/tiny_llm.yaml"):
         return dict(DEFAULT_CONFIG)
 
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             raw = yaml.safe_load(f)
     except Exception:
         raw = None

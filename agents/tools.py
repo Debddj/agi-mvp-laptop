@@ -1,9 +1,8 @@
 import ast
 import math
 import operator
-import subprocess
-import json
 import os
+import subprocess
 
 
 class Tool:
@@ -127,7 +126,7 @@ class ImageAnalyzer(Tool):
         try:
             if not os.path.exists(image_path):
                 return {"success": False, "error": f"File not found: {image_path}"}
-            
+
             from PIL import Image
             img = Image.open(image_path)
             width, height = img.size
@@ -213,7 +212,7 @@ class FileSystemTool(Tool):
                 return {"success": False, "error": f"Directory not found: {path}"}
             elif action == "read":
                 if os.path.exists(path) and os.path.isfile(path):
-                    with open(path, "r", encoding="utf-8") as f:
+                    with open(path, encoding="utf-8") as f:
                         text = f.read(2048)  # Limit output
                     return {"success": True, "result": text}
                 return {"success": False, "error": f"File not found: {path}"}

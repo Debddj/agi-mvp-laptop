@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+
 from model.attention import CausalSelfAttention
 from model.mlp import MLP
 from model.norms import RMSNorm
@@ -40,7 +41,7 @@ class MultimodalLLM(nn.Module):
         image_size = config.get("image_size", 224)
         patch_size = config.get("patch_size", 16)
         vision_hidden_dim = config.get("vision_hidden_dim", self.hidden_size)
-        
+
         self.vision_encoder = VisionEncoder(
             image_size=image_size,
             patch_size=patch_size,
@@ -62,10 +63,10 @@ class MultimodalLLM(nn.Module):
             )
             for _ in range(config["n_layers"])
         ])
-        
+
         self.norm = RMSNorm(self.hidden_size)
         self.lm_head = nn.Linear(self.hidden_size, self.vocab_size, bias=False)
-        
+
         # Tie weights
         self.lm_head.weight = self.embed.weight
 
@@ -89,7 +90,7 @@ class MultimodalLLM(nn.Module):
         B, Total_T, H = x_embeds.shape
         pos = torch.arange(start_pos, start_pos + Total_T, device=x_embeds.device).unsqueeze(0)
         pos = torch.clamp(pos, max=self.max_seq_len - 1)
-        
+
         x_embeds = x_embeds + self.pos_embed(pos)
 
         for i, block in enumerate(self.blocks):

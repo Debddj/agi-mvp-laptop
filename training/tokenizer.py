@@ -1,5 +1,7 @@
-import sentencepiece as spm
 import os
+
+import sentencepiece as spm
+
 
 def train_tokenizer(
     input_file="data/sample.txt",

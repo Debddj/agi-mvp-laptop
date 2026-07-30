@@ -1,15 +1,15 @@
-from agents.llm_planner import llm_plan
-from agents.executor import execute
 from agents.critic import critique
+from agents.executor import execute
+from agents.llm_planner import llm_plan
 from agents.memory import get_cached_plan, store_plan
 
 
 def run_agent(model, task: str, image_path: str = None, max_iters=3):
-    print(f"\n==========================================")
+    print("\n==========================================")
     print(f"MULTI-MODAL AGI AGENT TASK: {task}")
     if image_path:
         print(f"IMAGE INPUT: {image_path}")
-    print(f"==========================================\n")
+    print("==========================================\n")
 
     cached = get_cached_plan(task)
     if cached:

@@ -1,6 +1,7 @@
 import torch
-from model.vision import VisionEncoder, process_image
+
 from model.transformer import MultimodalLLM
+from model.vision import VisionEncoder, process_image
 
 
 def test_vision_encoder_output_shape():

@@ -9,7 +9,7 @@ def load_memory():
     if not os.path.exists(MEMORY_FILE):
         return {}
     try:
-        with open(MEMORY_FILE, "r", encoding="utf-8") as f:
+        with open(MEMORY_FILE, encoding="utf-8") as f:
             return json.load(f)
     except Exception:
         return {}

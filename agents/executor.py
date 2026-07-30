@@ -1,5 +1,5 @@
-import json
 import re
+
 from agents.tools import AVAILABLE_TOOLS
 
 
@@ -32,7 +32,7 @@ def execute(step, task, image_path=None):
     Executes a plan step using appropriate multi-modal tools.
     """
     step_lower = step.lower()
-    task_lower = task.lower()
+    task.lower()
 
     # Direct tool call pattern parsing (e.g. calculator(expression="2+2"))
     tool_name, tool_args = parse_tool_call(step)

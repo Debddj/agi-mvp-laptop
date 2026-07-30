@@ -1,5 +1,5 @@
-import torch
 import sentencepiece as spm
+import torch
 
 from model.cache import KVCache
 from model.vision import process_image

@@ -1,13 +1,14 @@
-import os
 import math
+import os
+
+import sentencepiece as spm
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, random_split
-import sentencepiece as spm
 
-from model.transformer import MultimodalLLM
 from model.cache import KVCache
-from training.dataset import TextDataset, MultimodalDataset
+from model.transformer import MultimodalLLM
+from training.dataset import MultimodalDataset
 from utils.config import load_config
 
 
@@ -119,13 +120,13 @@ def train_epoch(model, dataloader, optimizer, scaler, scheduler, config, device)
 
 def main():
     device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
-    print(f"==========================================")
-    print(f"MULTI-MODAL AGI LLM TRAINING ENGINE")
+    print("==========================================")
+    print("MULTI-MODAL AGI LLM TRAINING ENGINE")
     print(f"Device: {device.upper()}")
     if device == "cuda":
         print(f"GPU Name: {torch.cuda.get_device_name(0)}")
         print(f"VRAM Available: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
-    print(f"==========================================\n")
+    print("==========================================\n")
 
     config = load_config()
     model = MultimodalLLM(config).to(device)
@@ -154,7 +155,7 @@ def main():
         shuffle=True,
         drop_last=False,
     )
-    val_loader = DataLoader(
+    DataLoader(
         val_dataset,
         batch_size=config["batch_size"],
         shuffle=False,

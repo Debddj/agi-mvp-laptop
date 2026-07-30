@@ -1,7 +1,6 @@
 import sentencepiece as spm
 import torch
 from torch.utils.data import Dataset
-from model.vision import process_image
 
 
 class TextDataset(Dataset):
@@ -9,7 +8,7 @@ class TextDataset(Dataset):
         self.sp = spm.SentencePieceProcessor()
         self.sp.load(tokenizer_model)
 
-        with open(text_file, "r", encoding="utf-8") as f:
+        with open(text_file, encoding="utf-8") as f:
             text = f.read()
 
         self.tokens = self.sp.encode(text)
@@ -37,7 +36,7 @@ class MultimodalDataset(Dataset):
         self.seq_len = seq_len
         self.image_size = image_size
 
-        with open(text_file, "r", encoding="utf-8") as f:
+        with open(text_file, encoding="utf-8") as f:
             text = f.read()
 
         self.tokens = self.sp.encode(text)

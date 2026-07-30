@@ -1,8 +1,9 @@
 import torch
-from model.norms import RMSNorm
-from model.mlp import MLP
+
 from model.attention import CausalSelfAttention
 from model.cache import KVCache
+from model.mlp import MLP
+from model.norms import RMSNorm
 from model.transformer import TinyLLM
 
 
@@ -54,7 +55,7 @@ def test_attention_causal_mask():
     attn = CausalSelfAttention(hidden_size, n_heads)
     B, T = 2, 10
     x = torch.randn(B, T, hidden_size)
-    out = attn(x)
+    attn(x)
 
     out_single = attn(x[:, :1])
     assert out_single.shape == (B, 1, hidden_size)

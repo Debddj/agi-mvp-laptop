@@ -1,9 +1,11 @@
 import os
+
 import pytest
-from agents.tools import Calculator, safe_eval
-from agents.executor import execute, parse_tool_call
+
 from agents.critic import critique
-from agents.memory import load_memory, save_memory, get_cached_plan, store_plan
+from agents.executor import execute, parse_tool_call
+from agents.memory import get_cached_plan, load_memory, save_memory, store_plan
+from agents.tools import Calculator, safe_eval
 
 
 def test_calculator_add():

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
 from model.norms import RMSNorm
 
 
@@ -13,7 +14,7 @@ class PatchEmbedding(nn.Module):
         self.image_size = image_size
         self.patch_size = patch_size
         self.num_patches = (image_size // patch_size) ** 2
-        
+
         self.proj = nn.Conv2d(
             in_channels,
             embed_dim,
@@ -56,7 +57,7 @@ class VisionEncoder(nn.Module):
             in_channels=in_channels,
             embed_dim=vision_hidden_dim
         )
-        
+
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=vision_hidden_dim,
             nhead=n_heads,
@@ -67,7 +68,7 @@ class VisionEncoder(nn.Module):
         )
         self.blocks = nn.TransformerEncoder(encoder_layer, num_layers=n_layers)
         self.norm = RMSNorm(vision_hidden_dim)
-        
+
         # Projection head to map visual features to LLM hidden dimension
         if vision_hidden_dim != llm_hidden_dim:
             self.proj = nn.Linear(vision_hidden_dim, llm_hidden_dim, bias=False)
@@ -99,22 +100,22 @@ def process_image(image_input, image_size=224):
 
     # Try PIL Image or numpy array
     try:
-        from PIL import Image
         import numpy as np
-        
+        from PIL import Image
+
         if isinstance(image_input, str):
             image_input = Image.open(image_input).convert("RGB")
         elif hasattr(image_input, "convert"):
             image_input = image_input.convert("RGB")
-            
+
         if hasattr(image_input, "resize"):
             image_input = image_input.resize((image_size, image_size))
-            
+
         arr = np.array(image_input, dtype=np.float32) / 255.0
         if arr.ndim == 3 and arr.shape[2] == 3:
             arr = arr.transpose(2, 0, 1)  # HWC to CHW
         tensor = torch.from_numpy(arr).unsqueeze(0)  # [1, 3, H, W]
         return tensor
-    except Exception as e:
+    except Exception:
         # Fallback dummy zero image
         return torch.zeros(1, 3, image_size, image_size, dtype=torch.float32)
